@@ -6,11 +6,21 @@
  * - Ürün arama ve filtreleme
  * - Ürün detayı
  * - Ürün ekleme/güncelleme/silme
+ * 
+ * ⚠️ GÜVENLİK ÖNLEMLERİ ⚠️
+ * - Input validation
+ * - SQL/NoSQL injection koruması
+ * - Rate limiting
  */
 
 const express = require('express');
 const router = express.Router();
 const mongoose = require('mongoose');
+const validator = require('validator');
+const { validateInput, rateLimitPerUser } = require('../middleware/auth');
+
+// Input validation middleware'i uygula
+router.use(validateInput);
 
 // Model'i import et (dinamik olarak)
 let Product;
@@ -36,17 +46,27 @@ try {
  */
 router.get('/', async (req, res) => {
   try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = parseInt(req.query.limit) || 20;
+    // Input validation
+    const page = Math.max(1, parseInt(req.query.page) || 1);
+    const limit = Math.min(100, parseInt(req.query.limit) || 20); // Max 100 ürün
     const skip = (page - 1) * limit;
 
-    // Filtreler
+    // Filtreler (Injection koruması)
     const filters = {};
+    
     if (req.query.category) {
-      filters.category = req.query.category;
+      // Sadece string olmasını kontrol et
+      if (!validator.isLength(req.query.category, { min: 1, max: 100 })) {
+        return res.status(400).json({ success: false, error: 'Geçersiz kategori' });
+      }
+      filters.category = validator.trim(req.query.category);
     }
+    
     if (req.query.brand) {
-      filters.brand = req.query.brand;
+      if (!validator.isLength(req.query.brand, { min: 1, max: 100 })) {
+        return res.status(400).json({ success: false, error: 'Geçersiz brand' });
+      }
+      filters.brand = validator.trim(req.query.brand);
     }
 
     // Sıralama

@@ -17,6 +17,7 @@ export default function PCBuilderPage() {
   const [budget, setBudget] = useState(30000)
   const [purpose, setPurpose] = useState<'oyun' | 'iş' | 'grafik' | 'genel'>('oyun')
   const [games, setGames] = useState<string[]>([])
+  const [includePeripherals, setIncludePeripherals] = useState(true)
   const [loading, setLoading] = useState(false)
   const [result, setResult] = useState<PCBuilderResponse | null>(null)
 
@@ -35,7 +36,8 @@ export default function PCBuilderPage() {
       const request: PCBuilderRequest = {
         budget,
         purpose,
-        games: purpose === 'oyun' ? games : undefined
+        games: purpose === 'oyun' ? games : undefined,
+        includePeripherals
       }
 
       const response = await buildPC(request)
@@ -90,6 +92,39 @@ export default function PCBuilderPage() {
                 <p className="text-sm text-gray-500 mt-2">
                   Önerilen minimum: 20.000 ₺
                 </p>
+              </div>
+
+              {/* Çevresel Ekipman */}
+              <div className="mb-6">
+                <label className="block font-semibold mb-3">
+                  🖥️ Konfigürasyon Kapsamı
+                </label>
+                <div className="space-y-3">
+                  <label className="flex items-center p-4 border-2 rounded-xl cursor-pointer hover:border-primary-300 transition-all">
+                    <input
+                      type="radio"
+                      checked={includePeripherals}
+                      onChange={() => setIncludePeripherals(true)}
+                      className="mr-3 w-5 h-5 text-primary-500"
+                    />
+                    <div>
+                      <div className="font-medium">Tam Kurulum</div>
+                      <div className="text-sm text-gray-500">Kasa + Çevresel ekipman (Monitör, Klavye, Mouse, Kulaklık)</div>
+                    </div>
+                  </label>
+                  <label className="flex items-center p-4 border-2 rounded-xl cursor-pointer hover:border-primary-300 transition-all">
+                    <input
+                      type="radio"
+                      checked={!includePeripherals}
+                      onChange={() => setIncludePeripherals(false)}
+                      className="mr-3 w-5 h-5 text-primary-500"
+                    />
+                    <div>
+                      <div className="font-medium">Sadece Kasa</div>
+                      <div className="text-sm text-gray-500">CPU, GPU, RAM, Anakart, PSU, Soğutma vb.</div>
+                    </div>
+                  </label>
+                </div>
               </div>
 
               {/* Kullanım Amacı */}

@@ -54,7 +54,9 @@ const sampleProducts = [
     subcategory: 'Ekran Kartı',
     brand: 'MSI',
     model: 'RTX 5090 Suprim Liquid',
-    images: ['https://via.placeholder.com/500x500/0ea5e9/ffffff?text=RTX+5090'],
+    images: [
+      'https://images.unsplash.com/photo-1587202372775-98927c89fd87?auto=format&fit=crop&w=900&q=80'
+    ],
     specifications: [
       { name: 'İşlemci', value: 'Ada Lovelace', category: 'Donanım' },
       { name: 'Bellek', value: '24GB GDDR6X', category: 'Donanım', unit: 'GB' },
@@ -78,7 +80,9 @@ const sampleProducts = [
     subcategory: 'Laptop',
     brand: 'Apple',
     model: 'MacBook Pro M5',
-    images: ['https://via.placeholder.com/500x500/000000/ffffff?text=MacBook+Pro'],
+    images: [
+      'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=900&q=80'
+    ],
     specifications: [
       { name: 'İşlemci', value: 'Apple M5', category: 'Donanım' },
       { name: 'RAM', value: '16GB', category: 'Donanım', unit: 'GB' },
@@ -102,7 +106,9 @@ const sampleProducts = [
     subcategory: 'Atıştırmalık',
     brand: 'Ülker',
     model: '36g Paket',
-    images: ['https://via.placeholder.com/500x500/8B4513/ffffff?text=Gofret'],
+    images: [
+      'https://images.unsplash.com/photo-1497051788611-2c64812349b4?auto=format&fit=crop&w=900&q=80'
+    ],
     specifications: [
       { name: 'Ağırlık', value: '36g', category: 'Fiziksel', unit: 'g' },
       { name: 'Kalori', value: '185 kcal', category: 'Besin', unit: 'kcal' },
@@ -132,7 +138,9 @@ const sampleProducts = [
     subcategory: 'Gazlı İçecek',
     brand: 'Coca Cola',
     model: '330ml Kutu',
-    images: ['https://via.placeholder.com/500x500/FF0000/ffffff?text=Coca+Cola'],
+    images: [
+      'https://images.unsplash.com/photo-1582719478248-54e9f2b1616a?auto=format&fit=crop&w=900&q=80'
+    ],
     specifications: [
       { name: 'Hacim', value: '330ml', category: 'Fiziksel', unit: 'ml' },
       { name: 'Kalori', value: '0 kcal', category: 'Besin', unit: 'kcal' },
@@ -161,7 +169,9 @@ const sampleProducts = [
     subcategory: 'İşlemci',
     brand: 'Intel',
     model: 'i9-14900K',
-    images: ['https://via.placeholder.com/500x500/0071C5/ffffff?text=Intel+i9'],
+    images: [
+      'https://images.unsplash.com/photo-1585079542156-2755d9c8a094?auto=format&fit=crop&w=900&q=80'
+    ],
     specifications: [
       { name: 'Çekirdek', value: '24', category: 'Donanım' },
       { name: 'Thread', value: '32', category: 'Donanım' },
@@ -185,7 +195,9 @@ const sampleProducts = [
     subcategory: 'Depolama',
     brand: 'Samsung',
     model: '870 EVO 1TB',
-    images: ['https://via.placeholder.com/500x500/1428A0/ffffff?text=Samsung+SSD'],
+    images: [
+      'https://images.unsplash.com/photo-1587202372775-98927c89fd87?auto=format&fit=crop&w=900&q=80'
+    ],
     specifications: [
       { name: 'Kapasite', value: '1TB', category: 'Depolama', unit: 'TB' },
       { name: 'Tip', value: 'SATA 3.0', category: 'Donanım' },
@@ -200,6 +212,245 @@ const sampleProducts = [
     ],
     rating: 4.8,
     reviewCount: 1893
+  },
+  {
+    name: 'ASUS ROG Swift PG27AQDM 27" OLED',
+    description: '27 inç QHD 240Hz OLED oyuncu monitörü. 0.03 ms tepki süresi ve G-Sync uyumlu.',
+    category: 'Bilgisayar',
+    subcategory: 'Monitör',
+    brand: 'ASUS',
+    model: 'ROG Swift PG27AQDM',
+    images: [
+      'https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=900&q=80'
+    ],
+    specifications: [
+      { name: 'Ekran Boyutu', value: '27', category: 'Görüntü', unit: 'inç' },
+      { name: 'Çözünürlük', value: '2560x1440', category: 'Görüntü' },
+      { name: 'Yenileme Hızı', value: '240', category: 'Görüntü', unit: 'Hz' },
+      { name: 'Panel', value: 'OLED', category: 'Görüntü' },
+      { name: 'Tepki Süresi', value: '0.03', category: 'Performans', unit: 'ms' }
+    ],
+    prices: [
+      { siteName: 'incehesap', price: 38999, url: 'https://www.incehesap.com/asus-rog-swift-pg27aqdm-monitör-fiyati-67897', inStock: true, lastUpdated: new Date() },
+      { siteName: 'akakce', price: 39499, url: 'https://www.akakce.com/monitor/en-ucuz-asus-rog-swift-pg27aqdm-fiyati,1500.html', inStock: true, lastUpdated: new Date() }
+    ],
+    rating: 4.9,
+    reviewCount: 742
+  },
+  {
+    name: 'Kingston Fury Beast 32GB (2x16) DDR5 6000MHz CL36',
+    description: 'Yüksek hızlı DDR5 bellek kiti. XMP destekli, CL36 gecikme.',
+    category: 'Bilgisayar',
+    subcategory: 'RAM',
+    brand: 'Kingston',
+    model: 'Fury Beast DDR5 6000',
+    images: [
+      'https://images.unsplash.com/photo-1587202372775-98927c89fd87?auto=format&fit=crop&w=900&q=80'
+    ],
+    specifications: [
+      { name: 'Kapasite', value: '32', category: 'Bellek', unit: 'GB' },
+      { name: 'Kanal', value: '2x16', category: 'Bellek' },
+      { name: 'Frekans', value: '6000', category: 'Performans', unit: 'MHz' },
+      { name: 'Gecikme', value: 'CL36', category: 'Performans' },
+      { name: 'Tip', value: 'DDR5', category: 'Bellek' }
+    ],
+    prices: [
+      { siteName: 'incehesap', price: 2999, url: 'https://www.incehesap.com/kingston-fury-beast-32gb-ddr5-6000mhz-fiyati-12345', inStock: true, lastUpdated: new Date() },
+      { siteName: 'akakce', price: 3149, url: 'https://www.akakce.com/ram/en-ucuz-kingston-fury-beast-32gb-ddr5-6000-fiyati,1600.html', inStock: true, lastUpdated: new Date() }
+    ],
+    rating: 4.7,
+    reviewCount: 368
+  },
+  {
+    name: 'Corsair RM850x Shift 850W 80+ Gold',
+    description: 'Modüler, sessiz ve yüksek verimli PSU. Yan bağlantı konnektörlü yeni nesil tasarım.',
+    category: 'Bilgisayar',
+    subcategory: 'Güç Kaynağı',
+    brand: 'Corsair',
+    model: 'RM850x Shift',
+    images: [
+      'https://images.unsplash.com/photo-1587202372775-98927c89fd87?auto=format&fit=crop&w=900&q=80'
+    ],
+    specifications: [
+      { name: 'Güç', value: '850', category: 'Güç', unit: 'W' },
+      { name: 'Sertifika', value: '80+ Gold', category: 'Güç' },
+      { name: 'Modüler', value: 'Tam modüler', category: 'Özellik' },
+      { name: 'Fan', value: '140mm', category: 'Soğutma', unit: 'mm' }
+    ],
+    prices: [
+      { siteName: 'incehesap', price: 4299, url: 'https://www.incehesap.com/corsair-rm850x-shift-psu-fiyati-22334', inStock: true, lastUpdated: new Date() },
+      { siteName: 'akakce', price: 4499, url: 'https://www.akakce.com/psu/en-ucuz-corsair-rm850x-shift-fiyati,1700.html', inStock: true, lastUpdated: new Date() }
+    ],
+    rating: 4.8,
+    reviewCount: 512
+  },
+  {
+    name: 'Logitech MX Master 3S',
+    description: 'Ergonomik kablosuz mouse, 8K DPI, sessiz tıklama, Flow desteği.',
+    category: 'Bilgisayar',
+    subcategory: 'Mouse',
+    brand: 'Logitech',
+    model: 'MX Master 3S',
+    images: [
+      'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80'
+    ],
+    specifications: [
+      { name: 'DPI', value: '8000', category: 'Performans', unit: 'DPI' },
+      { name: 'Bağlantı', value: 'Bluetooth / Logi Bolt', category: 'Bağlantı' },
+      { name: 'Şarj', value: 'USB-C', category: 'Güç' },
+      { name: 'Ağırlık', value: '141', category: 'Fiziksel', unit: 'g' }
+    ],
+    prices: [
+      { siteName: 'incehesap', price: 2899, url: 'https://www.incehesap.com/logitech-mx-master-3s-fiyati-33445', inStock: true, lastUpdated: new Date() },
+      { siteName: 'akakce', price: 2999, url: 'https://www.akakce.com/fare-mouse/en-ucuz-logitech-mx-master-3s-fiyati,1800.html', inStock: true, lastUpdated: new Date() }
+    ],
+    rating: 4.9,
+    reviewCount: 2147
+  },
+  {
+    name: 'ASUS ROG Strix Z890-E Gaming WiFi',
+    description: 'Intel LGA1851 soket, DDR5 destekli, PCIe 5.0, WiFi 7, USB 3.2 Gen 2x2 Type-C.',
+    category: 'Bilgisayar',
+    subcategory: 'Anakart',
+    brand: 'ASUS',
+    model: 'ROG Strix Z890-E',
+    images: [
+      'https://images.unsplash.com/photo-1587202372775-98927c89fd87?auto=format&fit=crop&w=900&q=80'
+    ],
+    specifications: [
+      { name: 'Soket', value: 'LGA1851', category: 'Donanım' },
+      { name: 'Bellek', value: 'DDR5', category: 'Donanım' },
+      { name: 'PCIe', value: '5.0', category: 'Donanım' },
+      { name: 'WiFi', value: '7', category: 'Bağlantı' },
+      { name: 'Form Faktör', value: 'ATX', category: 'Fiziksel' }
+    ],
+    prices: [
+      { siteName: 'incehesap', price: 9899, url: 'https://www.incehesap.com/asus-rog-strix-z890-e-fiyati-55667', inStock: true, lastUpdated: new Date() },
+      { siteName: 'akakce', price: 10199, url: 'https://www.akakce.com/anakart/en-ucuz-asus-rog-strix-z890-e-fiyati,1900.html', inStock: true, lastUpdated: new Date() }
+    ],
+    rating: 4.8,
+    reviewCount: 687
+  },
+  {
+    name: 'Noctua NH-D15 Chromax.Black',
+    description: 'Yüksek performanslı hava soğutucusu, iki adet 140mm fan, neredeyse sessiz çalışma.',
+    category: 'Bilgisayar',
+    subcategory: 'CPU Soğutucu',
+    brand: 'Noctua',
+    model: 'NH-D15 Chromax',
+    images: [
+      'https://images.unsplash.com/photo-1587202372775-98927c89fd87?auto=format&fit=crop&w=900&q=80'
+    ],
+    specifications: [
+      { name: 'Tip', value: 'Hava Soğutucu', category: 'Soğutma' },
+      { name: 'Fanlar', value: '2x 140mm', category: 'Soğutma', unit: 'mm' },
+      { name: 'TDP', value: '250', category: 'Performans', unit: 'W' },
+      { name: 'Renk', value: 'Siyah', category: 'Görüntü' },
+      { name: 'Gürültü', value: '14.6 dB', category: 'Ses', unit: 'dB' }
+    ],
+    prices: [
+      { siteName: 'incehesap', price: 3499, url: 'https://www.incehesap.com/noctua-nh-d15-chromax-fiyati-66778', inStock: true, lastUpdated: new Date() },
+      { siteName: 'akakce', price: 3699, url: 'https://www.akakce.com/sogutucu/en-ucuz-noctua-nh-d15-chromax-fiyati,2000.html', inStock: true, lastUpdated: new Date() }
+    ],
+    rating: 4.9,
+    reviewCount: 1024
+  },
+  {
+    name: 'Corsair iCUE 4000 Airflow RGB Case',
+    description: 'Gelişmiş hava akışı, RGB aydınlatma, çok fan montajı, temperli cam panel.',
+    category: 'Bilgisayar',
+    subcategory: 'Kasa',
+    brand: 'Corsair',
+    model: 'iCUE 4000 Airflow',
+    images: [
+      'https://images.unsplash.com/photo-1587202372775-98927c89fd87?auto=format&fit=crop&w=900&q=80'
+    ],
+    specifications: [
+      { name: 'Form Faktör', value: 'Mid Tower', category: 'Fiziksel' },
+      { name: 'Materyal', value: 'Alüminyum / Çelik', category: 'Materyal' },
+      { name: 'Fan Montajı', value: '6 adet 120mm', category: 'Soğutma', unit: 'mm' },
+      { name: 'GPU Uzunluğu', value: '370mm', category: 'Uyumluluk', unit: 'mm' },
+      { name: 'Aydınlatma', value: 'RGB', category: 'Özellik' }
+    ],
+    prices: [
+      { siteName: 'incehesap', price: 3199, url: 'https://www.incehesap.com/corsair-icue-4000-airflow-fiyati-77889', inStock: true, lastUpdated: new Date() },
+      { siteName: 'akakce', price: 3399, url: 'https://www.akakce.com/kasa/en-ucuz-corsair-icue-4000-airflow-fiyati,2100.html', inStock: true, lastUpdated: new Date() }
+    ],
+    rating: 4.7,
+    reviewCount: 856
+  },
+  {
+    name: 'Sony WH-1000XM5 Kablosuz Kulaklık',
+    description: 'Sınıf en iyi gürültü iptal etme, 30 saatlik pil, premium ses kalitesi.',
+    category: 'Elektronik',
+    subcategory: 'Kulaklık',
+    brand: 'Sony',
+    model: 'WH-1000XM5',
+    images: [
+      'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80'
+    ],
+    specifications: [
+      { name: 'Tür', value: 'Kablosuz', category: 'Bağlantı' },
+      { name: 'Gürültü İptali', value: 'Evet', category: 'Özellik' },
+      { name: 'Pil Ömrü', value: '30 saat', category: 'Pil', unit: 'saat' },
+      { name: 'Bluetooth', value: '5.3', category: 'Bağlantı' },
+      { name: 'Ağırlık', value: '250g', category: 'Fiziksel', unit: 'g' }
+    ],
+    prices: [
+      { siteName: 'Sony Mağazası', price: 11999, url: 'https://sony.com.tr', inStock: true, lastUpdated: new Date() },
+      { siteName: 'Hepsiburada', price: 12499, url: 'https://hepsiburada.com', inStock: true, lastUpdated: new Date() },
+      { siteName: 'Trendyol', price: 12299, url: 'https://trendyol.com', inStock: true, lastUpdated: new Date() }
+    ],
+    rating: 4.9,
+    reviewCount: 3456
+  },
+  {
+    name: 'DJI Air 3S Drone',
+    description: '48MP kamera, 46 dakika uçuş süresi, 8km menzil, 4K video.',
+    category: 'Hobi',
+    subcategory: 'Drone',
+    brand: 'DJI',
+    model: 'Air 3S',
+    images: [
+      'https://images.unsplash.com/photo-1579290328254-c1e5fa3c8eab?auto=format&fit=crop&w=900&q=80'
+    ],
+    specifications: [
+      { name: 'Kamera', value: '48MP', category: 'Görüntü', unit: 'MP' },
+      { name: 'Video', value: '4K', category: 'Görüntü' },
+      { name: 'Uçuş Süresi', value: '46 dakika', category: 'Performans', unit: 'dakika' },
+      { name: 'Menzil', value: '8km', category: 'Performans', unit: 'km' },
+      { name: 'Ağırlık', value: '738g', category: 'Fiziksel', unit: 'g' }
+    ],
+    prices: [
+      { siteName: 'DJI Resmi Mağazası', price: 64999, url: 'https://dji.com.tr', inStock: true, lastUpdated: new Date() },
+      { siteName: 'Teknosa', price: 67499, url: 'https://teknosa.com', inStock: true, lastUpdated: new Date() }
+    ],
+    rating: 4.8,
+    reviewCount: 745
+  },
+  {
+    name: 'FujiFilm Instax Mini Evo',
+    description: 'Anlık film kamerası, RGB LED flaş, çeşitli lens efektleri, bluetooth bağlantı.',
+    category: 'Hobi',
+    subcategory: 'Kamera',
+    brand: 'Fujifilm',
+    model: 'Instax Mini Evo',
+    images: [
+      'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?auto=format&fit=crop&w=900&q=80'
+    ],
+    specifications: [
+      { name: 'Film Boyutu', value: 'Instax Mini', category: 'Fiziksel' },
+      { name: 'Lens Efekti', value: '10 farklı', category: 'Özellik' },
+      { name: 'Flaş', value: 'RGB LED', category: 'Işık' },
+      { name: 'Bluetooth', value: 'Evet', category: 'Bağlantı' },
+      { name: 'Ağırlık', value: '307g', category: 'Fiziksel', unit: 'g' }
+    ],
+    prices: [
+      { siteName: 'Amazon', price: 5499, url: 'https://amazon.com.tr', inStock: true, lastUpdated: new Date() },
+      { siteName: 'Hepsiburada', price: 5799, url: 'https://hepsiburada.com', inStock: true, lastUpdated: new Date() }
+    ],
+    rating: 4.6,
+    reviewCount: 892
   }
 ];
 

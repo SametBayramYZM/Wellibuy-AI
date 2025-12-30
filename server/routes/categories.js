@@ -79,13 +79,17 @@ router.get('/:name/products', async (req, res) => {
     const limit = parseInt(req.query.limit) || 20;
     const skip = (page - 1) * limit;
 
-    // Ürünleri al
-    const products = await Product.find({ category: categoryName })
+    // Ürünleri al (case-insensitive arama için regex kullan)
+    const products = await Product.find({ 
+      category: new RegExp(`^${categoryName}$`, 'i')
+    })
       .sort({ rating: -1 })
       .skip(skip)
       .limit(limit);
 
-    const total = await Product.countDocuments({ category: categoryName });
+    const total = await Product.countDocuments({ 
+      category: new RegExp(`^${categoryName}$`, 'i')
+    });
 
     res.json({
       success: true,

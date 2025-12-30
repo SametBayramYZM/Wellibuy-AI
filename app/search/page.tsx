@@ -9,13 +9,20 @@
 
 'use client'
 
-import { useEffect, useState } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { useEffect, useState, useRef } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
+import Link from 'next/link'
 import Header from '@/components/layout/Header'
 import Footer from '@/components/layout/Footer'
 import { searchProducts, smartSearch } from '@/lib/api'
 import type { Product, SearchResults as SearchResultsType } from '@/types'
-import { Filter, Sparkles, ChevronDown, Grid, List } from 'lucide-react'
+import { Filter, Sparkles, ChevronDown, Grid, List, Send, X, Loader2 } from 'lucide-react'
+
+interface ChatMessage {
+  role: 'user' | 'assistant'
+  content: string
+  timestamp: Date
+}
 
 export default function SearchPage() {
   const searchParams = useSearchParams()
@@ -26,6 +33,25 @@ export default function SearchPage() {
   const [results, setResults] = useState<SearchResultsType | null>(null)
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid')
   const [showFilters, setShowFilters] = useState(false)
+  const [showAIChat, setShowAIChat] = useState(false)
+  const [chatMessages, setChatMessages] = useState<ChatMessage[]>([
+    {
+      role: 'assistant',
+      content: `"${query}" konusunda size yardımcı olabilirim. Başka hangi ürünü arıyorsunuz veya ne hakkında bilgi istiyorsunuz?`,
+      timestamp: new Date()
+    }
+  ])
+  const [chatInput, setChatInput] = useState('')
+  const [isChatLoading, setIsChatLoading] = useState(false)
+  const messagesEndRef = useRef<HTMLDivElement>(null)
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [chatMessages])
 
   useEffect(() => {
     loadResults()
@@ -55,6 +81,61 @@ export default function SearchPage() {
     }
   }
 
+  const handleChatSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!chatInput.trim() || isChatLoading) return
+
+    const userMessage: ChatMessage = {
+      role: 'user',
+      content: chatInput.trim(),
+      timestamp: new Date()
+    }
+
+    setChatMessages(prev => [...prev, userMessage])
+    setChatInput('')
+    setIsChatLoading(true)
+
+    try {
+      const response = await fetch('http://localhost:5001/api/ai/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          message: chatInput.trim(),
+          context: chatMessages.slice(-5).map(m => ({
+            role: m.role,
+            content: m.content
+          }))
+        }),
+      })
+
+      if (!response.ok) {
+        throw new Error('API isteği başarısız oldu')
+      }
+
+      const data = await response.json()
+      
+      const assistantMessage: ChatMessage = {
+        role: 'assistant',
+        content: data.response || 'Üzgünüm, bir yanıt oluşturamadım.',
+        timestamp: new Date()
+      }
+
+      setChatMessages(prev => [...prev, assistantMessage])
+    } catch (error) {
+      console.error('Chat hatası:', error)
+      const errorMessage: ChatMessage = {
+        role: 'assistant',
+        content: 'Üzgünüm, bir hata oluştu. Lütfen tekrar deneyin.',
+        timestamp: new Date()
+      }
+      setChatMessages(prev => [...prev, errorMessage])
+    } finally {
+      setIsChatLoading(false)
+    }
+  }
+
   return (
     <>
       <Header />
@@ -71,6 +152,13 @@ export default function SearchPage() {
               
               {/* Görünüm seçici */}
               <div className="flex items-center space-x-2">
+                <button
+                  onClick={() => setShowAIChat(!showAIChat)}
+                  className="flex items-center space-x-2 px-4 py-2 bg-gradient-to-r from-primary-500 to-primary-600 text-white rounded-lg hover:shadow-lg transition-all"
+                >
+                  <Sparkles className="w-5 h-5" />
+                  <span>AI Asistan</span>
+                </button>
                 <button
                   onClick={() => setViewMode('grid')}
                   className={`p-2 rounded-lg ${viewMode === 'grid' ? 'bg-primary-500 text-white' : 'bg-white'}`}
@@ -176,6 +264,79 @@ export default function SearchPage() {
         </div>
       </main>
 
+      {/* AI Asistan Modal */}
+      {showAIChat && (
+        <div className="fixed inset-0 bg-black/50 z-50 flex items-end md:items-center justify-end md:justify-center p-4">
+          <div className="bg-white rounded-t-2xl md:rounded-2xl w-full md:w-2xl max-w-2xl h-[80vh] md:h-[600px] flex flex-col shadow-2xl animate-in slide-in-from-bottom-4 duration-300">
+            {/* Header */}
+            <div className="bg-gradient-to-r from-primary-500 to-primary-600 text-white p-4 flex items-center justify-between rounded-t-2xl">
+              <div className="flex items-center space-x-3">
+                <Sparkles className="w-6 h-6" />
+                <div>
+                  <h3 className="font-bold">AI Asistan</h3>
+                  <p className="text-xs opacity-90">Arama yardımcınız</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setShowAIChat(false)}
+                className="p-1 hover:bg-white/20 rounded-lg transition-colors"
+              >
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            {/* Messages */}
+            <div className="flex-1 overflow-y-auto p-4 space-y-4">
+              {chatMessages.map((msg, idx) => (
+                <div
+                  key={idx}
+                  className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
+                >
+                  <div
+                    className={`max-w-xs px-4 py-2 rounded-2xl ${
+                      msg.role === 'user'
+                        ? 'bg-primary-500 text-white'
+                        : 'bg-gray-100 text-gray-900'
+                    }`}
+                  >
+                    <p className="text-sm">{msg.content}</p>
+                  </div>
+                </div>
+              ))}
+              {isChatLoading && (
+                <div className="flex justify-start">
+                  <div className="bg-gray-100 rounded-2xl px-4 py-2">
+                    <Loader2 className="w-4 h-4 animate-spin text-primary-500" />
+                  </div>
+                </div>
+              )}
+              <div ref={messagesEndRef} />
+            </div>
+
+            {/* Input */}
+            <form onSubmit={handleChatSubmit} className="p-4 border-t border-gray-200">
+              <div className="flex items-center space-x-2">
+                <input
+                  type="text"
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  placeholder="Mesaj yazın..."
+                  className="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-primary-500"
+                  disabled={isChatLoading}
+                />
+                <button
+                  type="submit"
+                  disabled={!chatInput.trim() || isChatLoading}
+                  className="p-2 bg-primary-500 text-white rounded-full hover:bg-primary-600 disabled:opacity-50 transition-colors"
+                >
+                  <Send className="w-5 h-5" />
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
       <Footer />
     </>
   )
@@ -186,49 +347,53 @@ function ProductCard({ product, viewMode }: { product: Product, viewMode: 'grid'
 
   if (viewMode === 'list') {
     return (
-      <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-xl transition-all flex gap-4">
-        <img
-          src={product.images[0]}
-          alt={product.name}
-          className="w-32 h-32 object-cover rounded-lg"
-        />
-        <div className="flex-1">
-          <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
-          <p className="text-gray-600 text-sm mb-2 line-clamp-2">{product.description}</p>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-2xl font-bold text-primary-600">{minPrice.toFixed(2)} ₺</p>
-              <p className="text-sm text-gray-500">{product.prices.length} satıcı</p>
+      <Link href={`/products/${product._id}`}>
+        <div className="bg-white rounded-xl p-4 shadow-md hover:shadow-xl transition-all flex gap-4 cursor-pointer">
+          <img
+            src={product.images[0]}
+            alt={product.name}
+            className="w-32 h-32 object-cover rounded-lg"
+          />
+          <div className="flex-1">
+            <h3 className="font-semibold text-lg mb-2 hover:text-primary-600">{product.name}</h3>
+            <p className="text-gray-600 text-sm mb-2 line-clamp-2">{product.description}</p>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-2xl font-bold text-primary-600">{minPrice.toFixed(2)} ₺</p>
+                <p className="text-sm text-gray-500">{product.prices.length} satıcı</p>
+              </div>
+              <div className="px-6 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors">
+                İncele
+              </div>
             </div>
-            <button className="px-6 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600">
-              İncele
-            </button>
           </div>
         </div>
-      </div>
+      </Link>
     )
   }
 
   return (
-    <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all">
-      <img
-        src={product.images[0]}
-        alt={product.name}
-        className="w-full h-48 object-cover"
-      />
-      <div className="p-4">
-        <p className="text-xs text-gray-500 mb-1">{product.brand}</p>
-        <h3 className="font-semibold mb-2 line-clamp-2">{product.name}</h3>
-        <div className="flex items-center mb-2">
-          <span className="text-yellow-400">★</span>
-          <span className="ml-1 text-sm">{product.rating}</span>
-          <span className="ml-1 text-xs text-gray-500">({product.reviewCount})</span>
+    <Link href={`/products/${product._id}`}>
+      <div className="bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all cursor-pointer">
+        <img
+          src={product.images[0]}
+          alt={product.name}
+          className="w-full h-48 object-cover hover:scale-105 transition-transform"
+        />
+        <div className="p-4">
+          <p className="text-xs text-gray-500 mb-1">{product.brand}</p>
+          <h3 className="font-semibold mb-2 line-clamp-2 hover:text-primary-600">{product.name}</h3>
+          <div className="flex items-center mb-2">
+            <span className="text-yellow-400">★</span>
+            <span className="ml-1 text-sm">{product.rating}</span>
+            <span className="ml-1 text-xs text-gray-500">({product.reviewCount})</span>
+          </div>
+          <p className="text-2xl font-bold text-primary-600 mb-3">{minPrice.toFixed(2)} ₺</p>
+          <div className="w-full py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors text-center">
+            Detayları Gör
+          </div>
         </div>
-        <p className="text-2xl font-bold text-primary-600 mb-3">{minPrice.toFixed(2)} ₺</p>
-        <button className="w-full py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors">
-          Detayları Gör
-        </button>
       </div>
-    </div>
+    </Link>
   )
 }

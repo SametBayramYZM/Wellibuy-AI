@@ -214,7 +214,16 @@ export default function ProductPage() {
                 <div key={i} className="flex justify-between p-4 bg-gray-50 rounded-lg">
                   <span className="font-medium text-gray-700">{spec.name}</span>
                   <span className="font-semibold">
-                    {spec.value} {spec.unit}
+                    {(() => {
+                      // Eğer değer zaten birimi içeriyorsa tekrar eklemiyoruz
+                      if (spec.unit) {
+                        const lowerValue = String(spec.value).toLowerCase()
+                        const lowerUnit = spec.unit.toLowerCase()
+                        if (lowerValue.includes(lowerUnit)) return spec.value
+                        return `${spec.value} ${spec.unit}`
+                      }
+                      return spec.value
+                    })()}
                   </span>
                 </div>
               ))}

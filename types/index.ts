@@ -102,6 +102,7 @@ export interface PCBuilderRequest {
   budget: number;                 // Bütçe (TL)
   purpose: 'oyun' | 'iş' | 'grafik' | 'genel';  // Kullanım amacı
   games?: string[];              // Oynanacak oyunlar (varsa)
+  includePeripherals?: boolean;  // Çevresel ekipman dahil mi?
   preferences?: {
     preferredBrands?: string[];  // Tercih edilen markalar
     mustHave?: string[];         // Olmazsa olmaz özellikler
@@ -115,7 +116,7 @@ export interface PCBuilderRequest {
 export interface PCBuilderResponse {
   totalPrice: number;
   components: {
-    type: 'İşlemci' | 'Ekran Kartı' | 'Anakart' | 'RAM' | 'Depolama' | 'Güç Kaynağı' | 'Kasa';
+    type: 'İşlemci' | 'Ekran Kartı' | 'Anakart' | 'RAM' | 'Depolama' | 'Güç Kaynağı' | 'Kasa' | 'CPU Soğutucu' | 'Kasa Fanı' | 'Monitör' | 'Klavye' | 'Mouse' | 'Kulaklık';
     product: Product;
     reason: string;              // Neden bu parça seçildi
   }[];

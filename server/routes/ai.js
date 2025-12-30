@@ -113,7 +113,7 @@ function getRecommendationReason(product, purpose) {
  */
 router.post('/pc-builder', async (req, res) => {
   try {
-    const { budget, purpose, games, preferences } = req.body;
+    const { budget, purpose, games, includePeripherals = true, preferences } = req.body;
 
     if (!budget) {
       return res.status(400).json({
@@ -131,25 +131,70 @@ router.post('/pc-builder', async (req, res) => {
     // Parça tiplerini ayır
     const cpus = components.filter(c => 
       c.name.toLowerCase().includes('işlemci') || 
-      c.name.toLowerCase().includes('processor')
+      c.name.toLowerCase().includes('processor') ||
+      c.name.toLowerCase().includes('i9') ||
+      c.name.toLowerCase().includes('i7') ||
+      c.subcategory === 'İşlemci'
     );
     const gpus = components.filter(c => 
       c.name.toLowerCase().includes('ekran kartı') || 
       c.name.toLowerCase().includes('rtx') ||
-      c.name.toLowerCase().includes('nvidia')
+      c.name.toLowerCase().includes('nvidia') ||
+      c.name.toLowerCase().includes('geforce') ||
+      c.subcategory === 'Ekran Kartı'
     );
     const rams = components.filter(c => 
-      c.name.toLowerCase().includes('ram')
+      c.name.toLowerCase().includes('ram') ||
+      c.name.toLowerCase().includes('fury') ||
+      c.name.toLowerCase().includes('vengeance') ||
+      c.subcategory === 'RAM'
     );
     const storages = components.filter(c => 
       c.name.toLowerCase().includes('ssd') || 
-      c.name.toLowerCase().includes('hdd')
+      c.name.toLowerCase().includes('hdd') ||
+      c.name.toLowerCase().includes('evo') ||
+      c.subcategory === 'Depolama'
+    );
+    const psus = components.filter(c =>
+      c.name.toLowerCase().includes('psu') ||
+      c.name.toLowerCase().includes('güç kaynağı') ||
+      c.name.toLowerCase().includes('power supply') ||
+      c.name.toLowerCase().includes('watt') ||
+      c.subcategory === 'Güç Kaynağı'
+    );
+    const monitors = components.filter(c =>
+      c.name.toLowerCase().includes('monitör') ||
+      c.name.toLowerCase().includes('monitor') ||
+      c.subcategory === 'Monitör'
+    );
+    const keyboards = components.filter(c =>
+      c.name.toLowerCase().includes('klavye') ||
+      c.name.toLowerCase().includes('keyboard') ||
+      c.subcategory === 'Klavye'
+    );
+    const mice = components.filter(c =>
+      c.name.toLowerCase().includes('mouse') ||
+      c.name.toLowerCase().includes('fare') ||
+      c.subcategory === 'Mouse'
+    );
+    const headsets = components.filter(c =>
+      c.name.toLowerCase().includes('kulaklık') ||
+      c.name.toLowerCase().includes('headset') ||
+      c.name.toLowerCase().includes('headphone') ||
+      c.subcategory === 'Kulaklık'
     );
 
-    // Basit bütçe dağılımı
-    const distribution = purpose === 'oyun' 
-      ? { cpu: 0.25, gpu: 0.45, ram: 0.15, storage: 0.15 }
-      : { cpu: 0.35, gpu: 0.30, ram: 0.20, storage: 0.15 };
+    // Bütçe dağılımı (çevresel ekipman dahil mi?)
+    let distribution;
+    if (includePeripherals) {
+      distribution = purpose === 'oyun' 
+        ? { cpu: 0.15, gpu: 0.30, ram: 0.08, storage: 0.07, psu: 0.08, monitor: 0.15, keyboard: 0.06, mouse: 0.06, headset: 0.05 }
+        : { cpu: 0.20, gpu: 0.20, ram: 0.10, storage: 0.08, psu: 0.08, monitor: 0.18, keyboard: 0.06, mouse: 0.06, headset: 0.04 };
+    } else {
+      distribution = purpose === 'oyun' 
+        ? { cpu: 0.25, gpu: 0.45, ram: 0.12, storage: 0.10, psu: 0.08 }
+        : { cpu: 0.30, gpu: 0.30, ram: 0.15, storage: 0.12, psu: 0.13 };
+    }
 
     // Her kategoriden en uygun ürünü seç
     const selectedComponents = [];
@@ -206,6 +251,76 @@ router.post('/pc-builder', async (req, res) => {
           reason: 'Hızlı yükleme süreleri ve geniş alan'
         });
         totalPrice += storage.prices[0].price;
+      }
+    }
+
+    // Güç Kaynağı seç
+    if (psus.length > 0) {
+      const psu = findBestComponent(psus, budget * distribution.psu, purpose);
+      if (psu) {
+        selectedComponents.push({
+          type: 'Güç Kaynağı',
+          product: psu,
+          reason: 'Sistem kararlılığı ve güvenli güç sağlama'
+        });
+        totalPrice += psu.prices[0].price;
+      }
+    }
+
+    // Çevresel ekipman (eğer dahil edilmişse)
+    if (includePeripherals) {
+      // Monitör seç
+      if (monitors.length > 0) {
+        const monitor = findBestComponent(monitors, budget * distribution.monitor, purpose);
+        if (monitor) {
+          selectedComponents.push({
+            type: 'Monitör',
+            product: monitor,
+            reason: purpose === 'oyun' 
+              ? 'Yüksek yenileme hızı ve düşük gecikme süresi'
+              : 'Renk doğruluğu ve görüntü kalitesi'
+          });
+          totalPrice += monitor.prices[0].price;
+        }
+      }
+
+      // Klavye seç
+      if (keyboards.length > 0) {
+        const keyboard = findBestComponent(keyboards, budget * distribution.keyboard, purpose);
+        if (keyboard) {
+          selectedComponents.push({
+            type: 'Klavye',
+            product: keyboard,
+            reason: purpose === 'oyun' ? 'Mekanik anahtar ve RGB aydınlatma' : 'Ergonomik tasarım ve konfor'
+          });
+          totalPrice += keyboard.prices[0].price;
+        }
+      }
+
+      // Mouse seç
+      if (mice.length > 0) {
+        const mouse = findBestComponent(mice, budget * distribution.mouse, purpose);
+        if (mouse) {
+          selectedComponents.push({
+            type: 'Mouse',
+            product: mouse,
+            reason: purpose === 'oyun' ? 'Yüksek DPI ve hassasiyet' : 'Ergonomik ve kablosuz kullanım'
+          });
+          totalPrice += mouse.prices[0].price;
+        }
+      }
+
+      // Kulaklık seç
+      if (headsets.length > 0) {
+        const headset = findBestComponent(headsets, budget * distribution.headset, purpose);
+        if (headset) {
+          selectedComponents.push({
+            type: 'Kulaklık',
+            product: headset,
+            reason: purpose === 'oyun' ? 'Surround ses ve mikrofon kalitesi' : 'Ses kalitesi ve konfor'
+          });
+          totalPrice += headset.prices[0].price;
+        }
       }
     }
 
@@ -470,6 +585,112 @@ router.post('/smart-search', async (req, res) => {
     res.status(500).json({
       success: false,
       error: 'Arama işlenemedi'
+    });
+  }
+});
+
+// ============================================
+// AI CHAT ASISTANI
+// ============================================
+
+/**
+ * POST /api/ai/chat
+ * Body: { message: string, context: Array }
+ * Genel AI asistan sohbet endpoint'i
+ */
+router.post('/chat', async (req, res) => {
+  try {
+    const { message, context = [] } = req.body;
+
+    if (!message) {
+      return res.status(400).json({
+        success: false,
+        error: 'Mesaj gerekli'
+      });
+    }
+
+    // Veritabanından güncel ürün bilgilerini al
+    const products = await Product.find().limit(10).select('name category prices.price specifications');
+    
+    // Akıllı mock yanıtlar (OpenAI kredisi dolunca kullanılır)
+    let response = '';
+    const lowerMessage = message.toLowerCase();
+    
+    if (lowerMessage.includes('bilgisayar topla') || lowerMessage.includes('pc topla') || lowerMessage.includes('video düzenl')) {
+      const relevantProducts = products.filter(p => 
+        p.category === 'Bilgisayar' || p.category === 'bilgisayar'
+      );
+      response = `Video düzenleme için harika bir bilgisayar önerisi hazırladım! 📹
+
+Sistemimizde şu anda şu bileşenler mevcut:
+${relevantProducts.slice(0, 5).map(p => 
+  `✓ ${p.name} - ${p.prices && p.prices[0] ? p.prices[0].price.toLocaleString('tr-TR') + ' TL' : 'Fiyat bilgisi yok'}`
+).join('\n')}
+
+Video düzenleme için önerilerim:
+- Güçlü işlemci (Intel i9 veya AMD Ryzen 9)
+- Minimum 32GB RAM
+- Hızlı NVMe SSD (1TB+)
+- İyi bir ekran kartı (RTX 4070 üzeri)
+- Kaliteli monitör
+
+Daha detaylı bilgi için PC Builder sayfamızı ziyaret edebilirsin! 🚀`;
+    } else if (lowerMessage.includes('fiyat') || lowerMessage.includes('karşılaştır')) {
+      const mentionedProduct = products.find(p => 
+        lowerMessage.includes(p.name.toLowerCase().split(' ')[0])
+      );
+      if (mentionedProduct) {
+        response = `${mentionedProduct.name} için fiyat bilgileri:
+
+${mentionedProduct.prices ? mentionedProduct.prices.map((p, i) => 
+  `${i + 1}. ${p.store}: ${p.price.toLocaleString('tr-TR')} TL`
+).join('\n') : 'Fiyat bilgisi mevcut değil'}
+
+En iyi fiyatı bulmak için ürün sayfasını ziyaret edebilirsin! 💰`;
+      } else {
+        response = `Fiyat karşılaştırması yapabilirim! Hangi ürünü arıyorsun? 
+
+Sistemimizde şu anda şu ürünler mevcut:
+${products.slice(0, 5).map(p => `- ${p.name}`).join('\n')}
+
+İstediğin ürünü söyleyebilir misin? 🔍`;
+      }
+    } else if (lowerMessage.includes('öner') || lowerMessage.includes('öneri')) {
+      response = `Tabii ki! Sana harika ürünler önerebilirim. 🎯
+
+Sistemimizde popüler ürünlerden bazıları:
+${products.slice(0, 5).map(p => 
+  `✨ ${p.name} (${p.category}) - ${p.prices && p.prices[0] ? p.prices[0].price.toLocaleString('tr-TR') + ' TL' : 'Fiyat bilgisi yok'}`
+).join('\n')}
+
+Ne tür bir ürün arıyorsun? Bütçen ne kadar? 💡`;
+    } else {
+      response = `Merhaba! 👋 
+
+Size yardımcı olabilirim. Ben Wellibuy AI asistanıyım ve şu konularda destek verebilirim:
+
+🛍️ Ürün önerileri
+💻 Bilgisayar toplama tavsiyeleri  
+💰 Fiyat karşılaştırmaları
+🔍 Ürün arama ve filtreleme
+
+Sistemimizde ${products.length}+ ürün mevcut. Ne aramak istersin?
+
+**Not:** OpenAI API kotası dolduğu için şu anda mock yanıtlarla çalışıyorum. Gerçek AI yanıtları için lütfen OpenAI hesabınıza kredi ekleyin.`;
+    }
+
+    res.json({
+      success: true,
+      response: response,
+      timestamp: new Date()
+    });
+
+  } catch (error) {
+    console.error('AI Chat hatası:', error);
+    res.status(500).json({
+      success: false,
+      error: error.message || 'Chat işlenemedi',
+      response: 'Üzgünüm, şu anda bir teknik sorun yaşıyorum. Lütfen daha sonra tekrar deneyin.'
     });
   }
 });

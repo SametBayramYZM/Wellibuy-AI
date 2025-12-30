@@ -22,6 +22,12 @@ export default function CategoryPage() {
   const [loading, setLoading] = useState(true)
   const [page, setPage] = useState(1)
 
+  // Kategori ismini capitalize et (ilk harf büyük)
+  const formattedCategory = categoryName
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
+
   useEffect(() => {
     loadProducts()
   }, [categoryName, page])
@@ -29,9 +35,9 @@ export default function CategoryPage() {
   async function loadProducts() {
     setLoading(true)
     try {
-      const response = await getCategoryProducts(categoryName, page)
+      const response = await getCategoryProducts(formattedCategory, page)
       if (response.success && response.data) {
-        setProducts(response.data.products)
+        setProducts(response.data.products || [])
       }
     } catch (error) {
       console.error('Kategori yükleme hatası:', error)
@@ -46,11 +52,11 @@ export default function CategoryPage() {
       
       <main className="flex-1 bg-gray-50">
         <div className="container-padding mx-auto py-8">
-          <h1 className="text-3xl font-bold mb-8 capitalize">{categoryName}</h1>
+          <h1 className="text-3xl font-bold mb-8 capitalize">{formattedCategory}</h1>
 
           {loading ? (
             <div className="flex justify-center items-center h-64">
-              <div className="spinner" />
+              <div className="text-gray-500">Yükleniyor...</div>
             </div>
           ) : products.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
