@@ -1,0 +1,50 @@
+{
+  "name": "wellibuy",
+  "version": "1.0.0",
+  "description": "Wellibuy.com - Akıllı E-Ticaret Platformu - Yapay Zeka Destekli Alışveriş Deneyimi",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "server": "node server/index.js",
+    "seed": "node scripts/seed-products.js",
+    "check": "node scripts/check-setup.js",
+    "setup": "powershell -ExecutionPolicy Bypass -File start.ps1"
+  },
+  "dependencies": {
+    "next": "14.2.4",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "typescript": "5.4.5",
+    "@types/node": "20.12.12",
+    "@types/react": "18.3.3",
+    "@types/react-dom": "18.3.0",
+    "tailwindcss": "3.4.3",
+    "postcss": "8.4.38",
+    "autoprefixer": "10.4.19",
+    "express": "4.19.2",
+    "mongoose": "8.4.0",
+    "cors": "2.8.5",
+    "dotenv": "16.4.5",
+    "axios": "1.7.2",
+    "openai": "4.47.3",
+    "zod": "3.23.8",
+    "date-fns": "3.6.0",
+    "lucide-react": "0.395.0",
+    "framer-motion": "11.2.10",
+    "recharts": "2.12.7",
+    "react-webcam": "7.2.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.0",
+    "@typescript-eslint/parser": "^7.8.0",
+    "@typescript-eslint/eslint-plugin": "^7.8.0"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=9.0.0"
+  }
+}
